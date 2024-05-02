@@ -1,0 +1,14 @@
+{
+  "name": "shitnobu",
+  "version": "1.0.0",
+  "description": "the greatest knockoff bot of all time",
+  "main": "main.ts",
+  "scripts": {
+    "start": "ts-node ./src/main.ts"
+  },
+  "author": "alwaystosti",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.14.1"
+  }
+}
