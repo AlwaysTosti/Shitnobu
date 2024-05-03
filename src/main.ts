@@ -17,44 +17,45 @@ const client = new Client({
 
 // When the client is ready, run this code one time.
 client.once(Events.ClientReady, readyClient => {
-	console.log(`${readyClient.user.tag} online.`);
+	console.log(`${readyClient.user.tag} is online.`);
 });
 
 // Log in to Discord with the bot token.
 client.login(token);
 
+// Load all command objects in the commands subfolder into an array.
+const dir = './src/commands';
+const commandArray: Command[] = [];
+
+fs.readdir(dir, (_err, files) => {
+	files.forEach(async file => {
+		const commandFile = await import('./commands/'+ file);
+		commandArray.push(commandFile.default);
+	});
+});
+
 // If a message is sent, 
 client.on('messageCreate', (message) => {
 
 	const content = message.content;
-	const channel = message.channel;
 
 	// check if it starts with a ".".
-	if(content.toString().startsWith(".")){
+	if(content.toString().startsWith('.')){
 		// If it does, make an array of the arguments (including the command itself),
-		const args = content.split(" ");
+		const args: string[] = content.split(' ');
 		// and then run commandCheck, passing the arguments through.
 		commandCheck(message, args);
 	};
 
 });
 
-
-function commandCheck(message: Message<boolean>, args: string[]){
-	const dir = './src/commands';
-
-	fs.readdir(dir, (err, files) => {
-		if(err){
-			throw err;
-		};
-
-		files.forEach(async file => {
-			if(file == "./commands/" + args[0].substring(1) + ".ts"){
-				const commandFile = await import("./commands/" + file);
-				const command = commandFile.default;
-				command(message, args);
-			};
-		});
-	});
-
+async function commandCheck(message: Message, args: string[]){
+	for(let i = 0; i < commandArray.length; i++){
+		if(message.content.substring(1) == commandArray[i].name && args.length < 1){
+			commandArray[i].execute(message);
+		}
+		else if(message.content.substring(1) == commandArray[i].name){
+			commandArray[i].execute(message, args)
+		}
+	}
 };

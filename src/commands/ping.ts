@@ -1,9 +1,11 @@
 import { Message } from 'discord.js'
 
-export default function(message: Message<boolean>) {
+export default {
 
-    const channel = message.channel;
+    name: 'ping',
+    aliases: [],
+    execute(message: Message){
+        message.reply('pong');
+    }
 
-    channel.send("pong");
-    
-}
+} satisfies Command;
