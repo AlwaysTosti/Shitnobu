@@ -1,11 +1,12 @@
-import { Message } from 'discord.js'
-
 export default {
 
     name: 'ping',
     aliases: [],
-    execute(message: Message){
-        message.reply('pong');
+    execute(message, _args){
+        message.reply('pong')
+        .then(repliedMessage => {
+            setTimeout(() => repliedMessage.delete(), 20000)
+        })
     }
 
-} satisfies Command;
+} satisfies Command
